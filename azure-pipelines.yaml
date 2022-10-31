@@ -198,7 +198,7 @@ stages:
               appName: 'anhhv3udacity-AppService'
               package: '$(Pipeline.Workspace)/fake-rest-api/$(Build.BuildId)-FakeRestAPI.zip'
               runtimeStack: 'DOTNETCORE|6.0'
-              appSettings: '-SCM_DO_BUILD_DURING_DEPLOYMENT "true"'
+              appSettings: '-SCM_DO_BUILD_DURING_DEPLOYMENT "true" -WEBSITE_RUN_FROM_PACKAGE 0'
 
 
           #--------------------------------------------#
