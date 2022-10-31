@@ -194,10 +194,9 @@ stages:
           - task: AzureWebApp@1
             inputs:
               azureSubscription: 'UdacityDS - 83'
-              appType: 'webAppLinux'
+              appType: 'webApp'
               appName: 'anhhv3udacity-AppService'
               package: '$(Pipeline.Workspace)/fake-rest-api/$(Build.BuildId)-FakeRestAPI.zip'
-              appSettings: '-SCM_DO_BUILD_DURING_DEPLOYMENT "true" -WEBSITE_RUN_FROM_PACKAGE 0'
 
 
           #--------------------------------------------#
