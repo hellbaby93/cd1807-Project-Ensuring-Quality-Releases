@@ -159,20 +159,21 @@ stages:
       displayName: FakeAPIPublish
       artifact: fake-rest-api
 
-    # #--------------------------------------------#
-    # # JMeter (Performance) Test Suite - Archive
-    # # ToDo: Complete the ArchiveFiles@2 task and publish step
-    # - task: ArchiveFiles@2
-    #   displayName: 'Archive PerformanceTestSuite'
-    #   inputs:
-    #     rootFolderOrFile:
-    #     includeRootFolder:
-    #     archiveType:
-    #     archiveFile:
-    # # JMeter Test Suite - Publish
-    # - publish:
-    #   displayName:
-    #   artifact:
+    #--------------------------------------------#
+    # JMeter (Performance) Test Suite - Archive
+    # ToDo: Complete the ArchiveFiles@2 task and publish step
+    - task: ArchiveFiles@2
+      displayName: 'Archive PerformanceTestSuite'
+      inputs:
+        rootFolderOrFile: $(System.DefaultWorkingDirectory)/automatedtesting/jmeter/*.jmx
+        includeRootFolder: false
+        archiveType: zip
+        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-jmeter-test-suite.zip'
+        replaceExistingArchive: true
+    # JMeter Test Suite - Publish
+    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-jmeter-test-suite.zip
+      displayName: Archive Jmeter Test Suites
+      artifact: jmeter-test
 
 #--------------------------------------------#
 # DEPLOYMENT STAGE
