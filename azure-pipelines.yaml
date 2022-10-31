@@ -16,7 +16,7 @@ pool:
 variables:
   python.version: '3.7.6'
   # ToDo: Replace the service connection name as used in the DevOps project settings
-  azureServiceConnectionId: 'UdacityDS - 71'
+  azureServiceConnectionId: 'UdacityDS - 83'
   # Project root folder. Point to the folder containing manage.py file.
   projectRoot: $(System.DefaultWorkingDirectory)
   # Environment name
@@ -46,9 +46,9 @@ stages:
         provider: 'azurerm'
         command: 'init'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-        backendServiceArm: 'UdacityDS - 71'
+        backendServiceArm: 'UdacityDS - 83'
         backendAzureRmResourceGroupName: 'Azuredevops'
-        backendAzureRmStorageAccountName: 'tfstate2998947'
+        backendAzureRmStorageAccountName: 'tfstate951326230'
         backendAzureRmContainerName: 'tfstate'
         backendAzureRmKey: 'tfstate'
 
@@ -193,7 +193,7 @@ stages:
           steps:
           - task: AzureWebApp@1
             inputs:
-              azureSubscription: 'UdacityDS - 71'
+              azureSubscription: 'UdacityDS - 83'
               appType: 'webAppLinux'
               appName: 'anhhv3udacity-AppService'
               package: '$(Pipeline.Workspace)/fake-rest-api/$(Build.BuildId)-FakeRestAPI.zip'
@@ -207,7 +207,7 @@ stages:
             inputs:
               script: |
                 echo "Hello, World"                                                            # ToDo: Write your commands
-              workingDirectory: $(Pipeline.Workspace)/<artifact>            # ToDo: Use the artifact name from the task above
+              # workingDirectory: $(Pipeline.Workspace)/<artifact>            # ToDo: Use the artifact name from the task above
 
   # #--------------------------------------------#
   # # Selenium | Functional UI Tests
