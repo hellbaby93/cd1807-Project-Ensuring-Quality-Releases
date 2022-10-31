@@ -150,14 +150,15 @@ stages:
     - task: ArchiveFiles@2
       displayName: 'Archive FakeRestAPI'
       inputs:
-        rootFolderOrFile:
-        includeRootFolder:
-        archiveType:
-        archiveFile:
+        rootFolderOrFile: '$(Build.BinariesDirectory)'
+        includeRootFolder: true
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+        replaceExistingArchive: true
     # FakeRestAPI - Publish
-    - publish:
-      displayName:
-      artifact:
+    - publish: FakeAPI
+      displayName: FakeAPIPublish
+      artifact: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
 
     #--------------------------------------------#
     # JMeter (Performance) Test Suite - Archive
