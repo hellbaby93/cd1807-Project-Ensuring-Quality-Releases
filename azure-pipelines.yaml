@@ -124,7 +124,7 @@ stages:
     - task: PublishTestResults@2
       inputs:
         testResultsFormat: 'JUnit'
-        testResultsFiles: 'test_reports/*.xml'
+        testResultsFiles: '$(System.DefaultWorkingDirectory)/test_reports/*.xml'
         mergeTestResults: true
 
     #--------------------------------------------#
