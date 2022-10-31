@@ -197,7 +197,7 @@ stages:
               appType: 'webAppLinux'
               appName: 'anhhv3udacity-AppService'
               package: '$(Pipeline.Workspace)/fake-rest-api/$(Build.BuildId)-FakeRestAPI.zip'
-              runtimeStack: 'DOTNETCORE|6.0'
+              runtimeStack: 'DOTNETCORE|3.1'
           #--------------------------------------------#
           # Run JMeter test suite against the App Service
           # ToDo: Update the script below to install jmeter, unzip the jmeter test suite published zip artifact, and run the PerformanceTestSuite.
