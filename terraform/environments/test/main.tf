@@ -7,10 +7,10 @@ provider "azurerm" {
 }
 terraform {
   backend "azurerm" {
-    storage_account_name = "anhhv3udacitysa"
+    storage_account_name = "tfstate2998947"
     container_name       = "tfstate"
     key                  = "tfstate"
-    access_key           = "EDO1xOiHF9fUMt2VUrxqbGMakQbvlMmwIKlecUuSY1BfOEsWbP1gDDHandniFvc9Nwume3USjs1t+AStHBKW3Q=="
+    sas_token            = "?sv=2021-06-08&ss=b&srt=co&sp=rwdlaciytfx&se=2023-10-31T10:58:43Z&st=2022-10-31T02:58:43Z&spr=https&sig=qQzr0O4eJEncKAZ8IcLYZMjD4DGTyenrzzjZyhlbOFI%3D"
   }
 }
 module "resource_group" {
@@ -19,14 +19,14 @@ module "resource_group" {
   location       = var.location
 }
 module "network" {
-  source               = "../../modules/network"
-  address_space        = var.address_space
-  location             = var.location
-  virtual_network_name = var.virtual_network_name
-  application_type     = var.application_type
-  resource_type        = "NET"
-  resource_group       = module.resource_group.resource_group_name
-  address_prefixes_test  = var.address_prefixes_test
+  source                = "../../modules/network"
+  address_space         = var.address_space
+  location              = var.location
+  virtual_network_name  = var.virtual_network_name
+  application_type      = var.application_type
+  resource_type         = "NET"
+  resource_group        = module.resource_group.resource_group_name
+  address_prefixes_test = var.address_prefixes_test
 }
 
 module "nsg-test" {
@@ -51,4 +51,12 @@ module "publicip" {
   application_type = var.application_type
   resource_type    = "publicip"
   resource_group   = module.resource_group.resource_group_name
+}
+module "vm" {
+  source           = "../../modules/vm"
+  location         = var.location
+  application_type = var.application_type
+  resource_group   = module.resource_group.resource_group_name
+  subnet_id        = module.network.subnet_id_test
+  vm_public_ip     = module.publicip.vm_public_ip_address_id
 }
