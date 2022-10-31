@@ -72,7 +72,7 @@ stages:
     - task: DownloadSecureFile@1
       name: udacity_public_key
       inputs:
-        secureFile: id_rsa.pub
+        secureFile: id_rsa
 
 
     # Run Terraform Apply
