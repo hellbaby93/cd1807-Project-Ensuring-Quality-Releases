@@ -106,6 +106,7 @@ stages:
     # Postman Data Validation Test Suite
     # ToDo: Verify the working directory and the newman scripts
     - task: CmdLine@2
+      retryCountOnTaskFailure: 5
       displayName: Run Data Validation Tests
       continueOnError: true
       inputs:
@@ -114,6 +115,7 @@ stages:
     # Postman Regression Test Suite
     # ToDo: Update the command and verify the working directory
     - task: CmdLine@2
+      retryCountOnTaskFailure: 5
       displayName: Run Regression Tests
       continueOnError: true
       inputs:
