@@ -106,20 +106,18 @@ stages:
     # Postman Data Validation Test Suite
     # ToDo: Verify the working directory and the newman scripts
     - task: CmdLine@2
-      retryCountOnTaskFailure: 5
       displayName: Run Data Validation Tests
       continueOnError: true
       inputs:
-        script: newman run "Starter APIs.data_validation.json" -x -e "StarterAPITestEnv.postman_environment.json" --delay-request 5000 -r cli,junit --reporter-junit-export $(System.DefaultWorkingDirectory)/test_reports/data_validation.xml
+        script: newman run "Starter APIs.data_validation.json" -x -e "StarterAPITestEnv.postman_environment.json" --delay-request 1000 -r cli,junit --reporter-junit-export $(System.DefaultWorkingDirectory)/test_reports/data_validation.xml
         workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
     # Postman Regression Test Suite
     # ToDo: Update the command and verify the working directory
     - task: CmdLine@2
-      retryCountOnTaskFailure: 5
       displayName: Run Regression Tests
       continueOnError: true
       inputs:
-        script: newman run "Starter APIs.regression.json" -x -e "StarterAPITestEnv.postman_environment.json" --delay-request 5000 -r cli,junit --reporter-junit-export $(System.DefaultWorkingDirectory)/test_reports/regression.xml
+        script: newman run "Starter APIs.regression.json" -x -e "StarterAPITestEnv.postman_environment.json" --delay-request 1000 -r cli,junit --reporter-junit-export $(System.DefaultWorkingDirectory)/test_reports/regression.xml
         workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
     # Postman - Publish Results
     # ToDo: Complete the task as explained here: https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/test/publish-test-results?view=azure-devops&tabs=trx%2Cyaml#yaml-snippet
@@ -155,6 +153,7 @@ stages:
         archiveType: 'zip'
         archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-FakeRestAPI.zip'
         replaceExistingArchive: true
+
     # FakeRestAPI - Publish
     - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-FakeRestAPI.zip
       displayName: FakeAPIPublish
