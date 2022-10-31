@@ -197,7 +197,6 @@ stages:
               appType: 'webAppLinux'
               appName: 'anhhv3udacity-AppService'
               package: '$(Pipeline.Workspace)/fake-rest-api/$(Build.BuildId)-FakeRestAPI.zip'
-              runtimeStack: 'DOTNETCORE|3.1'
           #--------------------------------------------#
           # Run JMeter test suite against the App Service
           # ToDo: Update the script below to install jmeter, unzip the jmeter test suite published zip artifact, and run the PerformanceTestSuite.
@@ -205,7 +204,7 @@ stages:
           - task: CmdLine@2
             inputs:
               script: |
-                                                                            # ToDo: Write your commands
+                echo "Hello, World"                                                            # ToDo: Write your commands
               workingDirectory: $(Pipeline.Workspace)/<artifact>            # ToDo: Use the artifact name from the task above
 
   # #--------------------------------------------#
