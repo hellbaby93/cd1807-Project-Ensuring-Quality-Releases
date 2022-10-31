@@ -19,7 +19,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
   name                = "${var.application_type}-vm"
   location            = var.location
   resource_group_name = var.resource_group
-  size                = "Standard_DS1_v2"
+  size                = "Standard_B1s"
   admin_username      = "anhhv3"
   source_image_id     = data.azurerm_image.search.id
 

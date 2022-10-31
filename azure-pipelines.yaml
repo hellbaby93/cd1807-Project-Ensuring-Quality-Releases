@@ -109,7 +109,7 @@ stages:
       displayName: Run Data Validation Tests
       continueOnError: true
       inputs:
-        script:           # ToDo: Write your commands
+        script: newman run "Starter APIs.data_validation.json"
         workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
     # Postman Regression Test Suite
     # ToDo: Update the command and verify the working directory
@@ -117,7 +117,7 @@ stages:
       displayName: Run Regression Tests
       continueOnError: true
       inputs:
-        script:           # ToDo: Write your commands
+        script: newman run "Starter APIs.regression.json"
         workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
     # Postman - Publish Results
     # ToDo: Complete the task as explained here: https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/test/publish-test-results?view=azure-devops&tabs=trx%2Cyaml#yaml-snippet
