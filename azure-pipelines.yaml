@@ -156,7 +156,7 @@ stages:
 
     # FakeRestAPI - Publish
     - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-FakeRestAPI.zip
-      displayName: FakeAPIPublish
+      displayName: Fake Rest API Publish
       artifact: fake-rest-api
 
     #--------------------------------------------#
@@ -194,9 +194,11 @@ stages:
           - task: AzureWebApp@1
             inputs:
               azureSubscription: 'UdacityDS - 83'
-              appType: 'webApp'
+              appType: 'webAppLinux'
               appName: 'anhhv3udacity-AppService'
               package: '$(Pipeline.Workspace)/fake-rest-api/$(Build.BuildId)-FakeRestAPI.zip'
+              runtimeStack: 'DOTNETCORE|6.0'
+              appSettings: '-SCM_DO_BUILD_DURING_DEPLOYMENT "true"'
 
 
           #--------------------------------------------#
