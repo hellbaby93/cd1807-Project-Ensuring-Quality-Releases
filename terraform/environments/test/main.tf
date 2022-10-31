@@ -1,16 +1,12 @@
 provider "azurerm" {
-  tenant_id       = var.tenant_id
-  subscription_id = var.subscription_id
-  client_id       = var.client_id
-  client_secret   = var.client_secret
+  # tenant_id       = var.tenant_id
+  # subscription_id = var.subscription_id
+  # client_id       = var.client_id
+  # client_secret   = var.client_secret
   features {}
 }
 terraform {
   backend "azurerm" {
-    storage_account_name = "tfstate2998947"
-    container_name       = "tfstate"
-    key                  = "tfstate"
-    sas_token            = "?sv=2021-06-08&ss=b&srt=co&sp=rwdlaciytfx&se=2023-10-31T10:58:43Z&st=2022-10-31T02:58:43Z&spr=https&sig=qQzr0O4eJEncKAZ8IcLYZMjD4DGTyenrzzjZyhlbOFI%3D"
   }
 }
 module "resource_group" {
