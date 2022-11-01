@@ -271,9 +271,17 @@ stages:
                 sudo apt-get upgrade -y
                 sudo apt-get install python3-pip -y
                 sudo apt-get install unzip -y
-                sudo apt-get install -y chromium-browser
+                # sudo apt-get install -y chromium-browser
 
-                export PATH=$PATH:/path/to/chromedriver
+                # export PATH=$PATH:/path/to/chromedriver
+                sudo apt-get install -y google-chrome-stable
+
+                wget https://chromedriver.storage.googleapis.com/94.0.4606.61/chromedriver_linux64.zip
+                unzip chromedriver_linux64.zip
+                sudo mv chromedriver /usr/bin/chromedriver
+                sudo chown root:root /usr/bin/chromedriver
+                sudo chmod +x /usr/bin/chromedriver
+
 
                 # ToDo: Write commands for deploying the UI Test Suite (published zip artifact) to the linux VM and execute the Test Suite
                 # ToDo: Direct the output of the Selenium Test Suite to a log file
