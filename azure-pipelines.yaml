@@ -260,8 +260,12 @@ stages:
       runOnce:
         deploy:
           steps:
-          - download: current
-            artifact: drop-uitests
+          - task: DownloadBuildArtifacts@1
+            inputs:
+              buildType: 'current'
+              downloadType: 'single'
+              artifactName: 'drop-uitest'
+              downloadPath: '$(System.ArtifactsDirectory)'          
           - task: Bash@3
             inputs:
               targetType: 'inline'
