@@ -206,14 +206,14 @@ stages:
             inputs:
               script: |
                 echo "================================Install JMeter================================"
-                wget https://downloads.apache.org//jmeter/binaries/apache-jmeter-5.5.zip -O apache-jmeter
-                unzip apache-jmeter
+                wget https://downloads.apache.org//jmeter/binaries/apache-jmeter-5.5.zip -O apache-jmeter -q
+                unzip apache-jmeter -qq
                 echo "================================Unzip Test Suites============================="
-                unzip $(Build.BuildId)-jmeter-test-suite.zip
+                unzip $(Build.BuildId)-jmeter-test-suite.zip -qq
                 echo "================================Replacing file content========================"
-                sed -i -E 's|(.+<stringProp name="filename">).*(/.+.csv</stringProp>)|\1'$(pwd)'}\2|' stress-test.jmx
+                sed -i -E 's|(.+<stringProp name="filename">).*(/.+.csv</stringProp>)|\1'$(pwd)'\2|' stress-test.jmx
                 cat stress-test.jmx
-                sed -i -E 's|(.+<stringProp name="filename">).*(/.+.csv</stringProp>)|\1'$(pwd)'}\2|' endurance-test.jmx
+                sed -i -E 's|(.+<stringProp name="filename">).*(/.+.csv</stringProp>)|\1'$(pwd)'\2|' endurance-test.jmx
                 cat endurance-test.jmx
                 echo "================================Execute Tests================================="
                 apache-jmeter-5.5/bin/jmeter -n -t endurance-test.jmx
