@@ -207,9 +207,9 @@ stages:
               script: |
                 echo "================================Install JMeter================================"
                 wget https://downloads.apache.org//jmeter/binaries/apache-jmeter-5.5.zip -O apache-jmeter -q
-                unzip apache-jmeter -qq
+                unzip -qq apache-jmeter
                 echo "================================Unzip Test Suites============================="
-                unzip $(Build.BuildId)-jmeter-test-suite.zip -qq
+                unzip -qq $(Build.BuildId)-jmeter-test-suite.zip
                 echo "================================Replacing file content========================"
                 sed -i -E 's|(.+<stringProp name="filename">).*(/.+.csv</stringProp>)|\1'$(pwd)'\2|' stress-test.jmx
                 cat stress-test.jmx
