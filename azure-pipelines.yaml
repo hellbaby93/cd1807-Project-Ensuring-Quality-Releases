@@ -193,30 +193,25 @@ stages:
 - stage: Test
   dependsOn: Deploy
   jobs:
-  - job: JMeter
-    steps:
-    #--------------------------------------------#
-    # Run JMeter test suite against the App Service
-    # ToDo: Update the script below to install jmeter, unzip the jmeter test suite published zip artifact, and run the PerformanceTestSuite.
-    # ToDo: Generate the log file.
-    - task: DownloadBuildArtifacts@1
-      displayName: Download JMeter Artifact
-      inputs:
-        buildType: 'current'
-        downloadType: 'single'
-        artifactName: 'jmeter-test'
-        downloadPath: '$(Pipeline.Workspace)'
-    - task: CmdLine@2
-      displayName: Install JMeter
-      inputs:
-        script: |
-          sudo apt-install -y wget
-          wget https://downloads.apache.org//jmeter/binaries/apache-jmeter-5.5.zip -O apache-jmeter
-          unzip apache-jmeter
-          unzip $(Build.BuildId)-FakeRestAPI.zip
-          apache-jmeter/bin/jmeter -n -j endurance-test.jmx
-          apache-jmeter/bin/jmeter -n -j stress-test.jmx
-        workingDirectory: $(Pipeline.Workspace)/fake-rest-api/
+  - deployment: FakeRestAPI
+    pool:
+      vmImage: 'Ubuntu-18.04'
+    environment: udacity
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: CmdLine@2
+            displayName: Run JMeter Test
+            inputs:
+              script: |
+                sudo apt-install -y wget
+                wget https://downloads.apache.org//jmeter/binaries/apache-jmeter-5.5.zip -O apache-jmeter
+                unzip apache-jmeter
+                unzip $(Build.BuildId)-FakeRestAPI.zip
+                apache-jmeter/bin/jmeter -n -j endurance-test.jmx
+                apache-jmeter/bin/jmeter -n -j stress-test.jmx
+              workingDirectory: $(Pipeline.Workspace)/fake-rest-api/
 
   # #--------------------------------------------#
   # # Selenium | Functional UI Tests
