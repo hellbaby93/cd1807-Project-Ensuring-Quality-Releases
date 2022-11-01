@@ -197,22 +197,26 @@ stages:
               package: '$(Pipeline.Workspace)/fake-rest-api/$(Build.BuildId)-FakeRestAPI.zip'
               deploymentMethod: 'zipDeploy'
 
-
-          #--------------------------------------------#
-          # Run JMeter test suite against the App Service
-          # ToDo: Update the script below to install jmeter, unzip the jmeter test suite published zip artifact, and run the PerformanceTestSuite.
-          # ToDo: Generate the log file.
-          - task: DownloadBuildArtifacts@1
-            inputs:
-              buildType: 'current'
-              downloadType: 'single'
-              artifactName: 'jmeter-test'
-              downloadPath: '$(Pipeline.Workspace)'
-          - task: CmdLine@2
-            inputs:
-              script: |
-                echo "Hello, World"                                                            # ToDo: Write your commands
-              # workingDirectory: $(Pipeline.Workspace)/<artifact>            # ToDo: Use the artifact name from the task above
+- stage: Test
+  dependsOn: Deploy
+  jobs:
+    - job:
+      steps:
+      #--------------------------------------------#
+      # Run JMeter test suite against the App Service
+      # ToDo: Update the script below to install jmeter, unzip the jmeter test suite published zip artifact, and run the PerformanceTestSuite.
+      # ToDo: Generate the log file.
+      - task: DownloadBuildArtifacts@1
+        inputs:
+          buildType: 'current'
+          downloadType: 'single'
+          artifactName: 'jmeter-test'
+          downloadPath: '$(Pipeline.Workspace)'
+      - task: CmdLine@2
+        inputs:
+          script: |
+            ls -la
+            # workingDirectory: $(Pipeline.Workspace)/<artifact>            # ToDo: Use the artifact name from the task above
 
   # #--------------------------------------------#
   # # Selenium | Functional UI Tests
