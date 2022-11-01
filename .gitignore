@@ -26,4 +26,3 @@ override.tf.json
 *_override.tf.json
 **/tmp/
 **.log
-**/html_report/
