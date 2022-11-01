@@ -89,35 +89,35 @@ stages:
     #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
     #     environmentServiceNameAzureRM: '$(azureServiceConnectionId)'
 
-#--------------------------------------------#
-    # Postman - Install Newman
-  - job: NewmanTest
-    steps:
-    - task: CmdLine@2
-      displayName: Install Newman
-      inputs:
-        script:           # ToDo: Write your commands to install newman
-        workingDirectory: $(System.DefaultWorkingDirectory)
-    # Postman Data Validation Test Suite
-    - task: CmdLine@2
-      displayName: Run Data Validation Tests
-      continueOnError: true
-      inputs:
-        script: newman run "Starter APIs.data_validation.json" -x -e "StarterAPITestEnv.postman_environment.json" --delay-request 1000 -r cli,junit --reporter-junit-export $(System.DefaultWorkingDirectory)/test_reports/data_validation.xml
-        workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
-    # Postman Regression Test Suite
-    - task: CmdLine@2
-      displayName: Run Regression Tests
-      continueOnError: true
-      inputs:
-        script: newman run "Starter APIs.regression.json" -x -e "StarterAPITestEnv.postman_environment.json" --delay-request 1000 -r cli,junit --reporter-junit-export $(System.DefaultWorkingDirectory)/test_reports/regression.xml
-        workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
-    # Postman - Publish Results
-    - task: PublishTestResults@2
-      inputs:
-        testResultsFormat: 'JUnit'
-        testResultsFiles: '$(System.DefaultWorkingDirectory)/test_reports/*.xml'
-        mergeTestResults: true
+# #--------------------------------------------#
+#     # Postman - Install Newman
+#   - job: NewmanTest
+#     steps:
+#     - task: CmdLine@2
+#       displayName: Install Newman
+#       inputs:
+#         script:           # ToDo: Write your commands to install newman
+#         workingDirectory: $(System.DefaultWorkingDirectory)
+#     # Postman Data Validation Test Suite
+#     - task: CmdLine@2
+#       displayName: Run Data Validation Tests
+#       continueOnError: true
+#       inputs:
+#         script: newman run "Starter APIs.data_validation.json" -x -e "StarterAPITestEnv.postman_environment.json" --delay-request 1000 -r cli,junit --reporter-junit-export $(System.DefaultWorkingDirectory)/test_reports/data_validation.xml
+#         workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
+#     # Postman Regression Test Suite
+#     - task: CmdLine@2
+#       displayName: Run Regression Tests
+#       continueOnError: true
+#       inputs:
+#         script: newman run "Starter APIs.regression.json" -x -e "StarterAPITestEnv.postman_environment.json" --delay-request 1000 -r cli,junit --reporter-junit-export $(System.DefaultWorkingDirectory)/test_reports/regression.xml
+#         workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
+#     # Postman - Publish Results
+#     - task: PublishTestResults@2
+#       inputs:
+#         testResultsFormat: 'JUnit'
+#         testResultsFiles: '$(System.DefaultWorkingDirectory)/test_reports/*.xml'
+#         mergeTestResults: true
   - job: Publishing
     steps:
     #--------------------------------------------#
@@ -193,7 +193,7 @@ stages:
 - stage: Test
   dependsOn: Deploy
   jobs:
-  - deployment: FakeRestAPI
+  - deployment: JmeterTest
     pool:
       vmImage: 'Ubuntu-18.04'
     environment: udacity
@@ -215,38 +215,71 @@ stages:
                 apache-jmeter-5.5/bin/jmeter -n -t stress-test.jmx
               workingDirectory: $(Pipeline.Workspace)/jmeter-test/
 
-  # #--------------------------------------------#
-  # # Selenium | Functional UI Tests
-  # # ToDo:
-  # - deployment: VMDeploy
-  #   displayName: Selenium Tests
-  #   environment:
-  #     name: udacity
-  #     resourceType: VirtualMachine
-  #     tags: selenium
-  #   strategy:
-  #     runOnce:
-  #       deploy:
-  #         steps:
-  #         - download: current
-  #           artifact: drop-ui-tests     # ToDo: Change/provide a name
+  - deployment: NewmanTest
+    pool:
+      vmImage: 'Ubuntu-18.04'
+    environment: udacity
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: CmdLine@2
+            displayName: Install Newman
+            inputs:
+              script:           # ToDo: Write your commands to install newman
+              workingDirectory: $(System.DefaultWorkingDirectory)
+          # Postman Data Validation Test Suite
+          - task: CmdLine@2
+            displayName: Run Data Validation Tests
+            continueOnError: true
+            inputs:
+              script: newman run "Starter APIs.data_validation.json" -x -e "StarterAPITestEnv.postman_environment.json" --delay-request 1000 -r cli,junit --reporter-junit-export $(System.DefaultWorkingDirectory)/test_reports/data_validation.xml
+              workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
+          # Postman Regression Test Suite
+          - task: CmdLine@2
+            displayName: Run Regression Tests
+            continueOnError: true
+            inputs:
+              script: newman run "Starter APIs.regression.json" -x -e "StarterAPITestEnv.postman_environment.json" --delay-request 1000 -r cli,junit --reporter-junit-export $(System.DefaultWorkingDirectory)/test_reports/regression.xml
+              workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
+          # Postman - Publish Results
+          - task: PublishTestResults@2
+            inputs:
+              testResultsFormat: 'JUnit'
+              testResultsFiles: '$(System.DefaultWorkingDirectory)/test_reports/*.xml'
+              mergeTestResults: true
 
-  #         - task: Bash@3
-  #           inputs:
-  #             targetType: 'inline'
-  #             script: |
-  #               # ToDo: Install Selenium, Chromium-browser & Chromedriver, if not already in the custom VM image.
-  #               #! /bin/bash
+  #--------------------------------------------#
+  # Selenium | Functional UI Tests
+  # ToDo:
+  - deployment: VMDeploy
+    displayName: Selenium Tests
+    environment:
+      name: udacity
+      resourceType: VirtualMachine
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: current
+            artifact: drop-ui-tests     # ToDo: Change/provide a name
 
-  #               sudo apt-get upgrade -y
-  #               sudo apt-get install python3-pip -y
-  #               sudo apt-get install unzip -y
-  #               sudo apt-get install -y chromium-browser
-  #               pip3 install selenium
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              script: |
+                # ToDo: Install Selenium, Chromium-browser & Chromedriver, if not already in the custom VM image.
+                #! /bin/bash
 
-  #               #  ToDo: Add chromedriver executable to path
-  #               export PATH=$PATH:/path/to/chromedriver
+                sudo apt-get upgrade -y
+                sudo apt-get install python3-pip -y
+                sudo apt-get install unzip -y
+                sudo apt-get install -y chromium-browser
+                pip3 install selenium
 
-  #               # ToDo: Write commands for deploying the UI Test Suite (published zip artifact) to the linux VM and execute the Test Suite
-  #               # ToDo: Direct the output of the Selenium Test Suite to a log file
+                #  ToDo: Add chromedriver executable to path
+                export PATH=$PATH:/path/to/chromedriver
+
+                # ToDo: Write commands for deploying the UI Test Suite (published zip artifact) to the linux VM and execute the Test Suite
+                # ToDo: Direct the output of the Selenium Test Suite to a log file
 
