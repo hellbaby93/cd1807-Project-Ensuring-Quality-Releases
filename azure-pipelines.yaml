@@ -209,8 +209,8 @@ stages:
                 wget https://downloads.apache.org//jmeter/binaries/apache-jmeter-5.5.zip -O apache-jmeter
                 unzip apache-jmeter
                 unzip $(Build.BuildId)-jmeter-test-suite.zip
-                sed -i -E 's|(.+<stringProp name="filename">).*(/.+.csv</stringProp>)|\1'$(pwd)'}\2|' stress-tess.jmx
-                sed -i -E 's|(.+<stringProp name="filename">).*(/.+.csv</stringProp>)|\1'$(pwd)'}\2|' endurance-tess.jmx
+                sed -i -E 's|(.+<stringProp name="filename">).*(/.+.csv</stringProp>)|\1'$(pwd)'}\2|' stress-test.jmx
+                sed -i -E 's|(.+<stringProp name="filename">).*(/.+.csv</stringProp>)|\1'$(pwd)'}\2|' endurance-test.jmx
                 apache-jmeter-5.5/bin/jmeter -n -t endurance-test.jmx
                 apache-jmeter-5.5/bin/jmeter -n -t stress-test.jmx
               workingDirectory: $(Pipeline.Workspace)/jmeter-test/
