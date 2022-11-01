@@ -60,7 +60,6 @@ stages:
     # OPTIONAL - This step is needed only if your Terraform VM uses an SSH key pair for login and you want your pipeline agent to connect to it.
     # Generate an SSH key pair in your local/AZ Cloud shell. Use the public key in the Terraform VM module.
     # Install public key and private key file to the pipeline agent, using the task below.
-    # ToDo: Change the inputs value below
     - task: InstallSSHKey@0
       inputs:
         knownHostsEntry: '172.173.176.46 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDJaR2tjUdYJBTHfgfGRWvlZDMXT3YPFq+nxXudboSpRqxCx7lwEib7EfJA95WsJj6a6xfHRx6+IY171Pxgb/YKm5cWWAYEujTsdHegTdDrPTf4gk5+aU9QpfV3c8503taWLSIzbpywsv9bnjLSQRo7hJv1b1L8eQ+zDx1bIR/MUtQt+5yWi20DnuYnHeLLNPRZFv9RP6yGGzzv+tF4z+u7tH46V3jwhBM0iqiUmtI92204YtEO8hXzBR1ExVvDs93CgBASCtbTGZ2vo/96Ty8MIyko6oqSXT8dzS0zju5r0aRTuLY03YfIrC3JCCVhgeSiLJGketIvJJQvtorKtOhz'
@@ -71,8 +70,6 @@ stages:
       name: udacity_public_key
       inputs:
         secureFile: id_rsa
-
-
     # Run Terraform Apply
     # ToDo: Change the workingDirectory path, as applicable to you
     - task: TerraformTaskV3@3
@@ -82,7 +79,6 @@ stages:
         command: 'apply'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
         environmentServiceNameAzureRM: '$(azureServiceConnectionId)'
-
     # ToDo: Change the workingDirectory path, as applicable to you
     # Destroy the resources in Azure by running a separate pipeline.
     # - task: TerraformTaskV3@3
@@ -95,14 +91,14 @@ stages:
 
 #--------------------------------------------#
     # Postman - Install Newman
-    # ToDo: Update the command and verify the working directory
+  - job: NewmanTest
+    steps:
     - task: CmdLine@2
       displayName: Install Newman
       inputs:
         script:           # ToDo: Write your commands to install newman
         workingDirectory: $(System.DefaultWorkingDirectory)
     # Postman Data Validation Test Suite
-    # ToDo: Verify the working directory and the newman scripts
     - task: CmdLine@2
       displayName: Run Data Validation Tests
       continueOnError: true
@@ -110,7 +106,6 @@ stages:
         script: newman run "Starter APIs.data_validation.json" -x -e "StarterAPITestEnv.postman_environment.json" --delay-request 1000 -r cli,junit --reporter-junit-export $(System.DefaultWorkingDirectory)/test_reports/data_validation.xml
         workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
     # Postman Regression Test Suite
-    # ToDo: Update the command and verify the working directory
     - task: CmdLine@2
       displayName: Run Regression Tests
       continueOnError: true
@@ -124,7 +119,8 @@ stages:
         testResultsFormat: 'JUnit'
         testResultsFiles: '$(System.DefaultWorkingDirectory)/test_reports/*.xml'
         mergeTestResults: true
-
+  - job: Publishing
+    steps:
     #--------------------------------------------#
     # Selenium (UI) Test Suite - Archive the package
     # "ArchiveFiles@2" picks up the web package and archives it.
@@ -142,7 +138,6 @@ stages:
 
     #--------------------------------------------#
     # FakeRestAPI - Archive
-    # ToDo: Complete the ArchiveFiles@2 task and publish step
     - task: ArchiveFiles@2
       displayName: 'Archive FakeRestAPI'
       inputs:
@@ -180,7 +175,6 @@ stages:
   jobs:
   #--------------------------------------------#
   # Deploy FakeRestAPI Web App
-  # ToDo: Provide <environment name> you created in your DevOps project
   - deployment: FakeRestAPI
     pool:
       vmImage: 'Ubuntu-18.04'
@@ -200,23 +194,23 @@ stages:
 - stage: Test
   dependsOn: Deploy
   jobs:
-    - job:
-      steps:
-      #--------------------------------------------#
-      # Run JMeter test suite against the App Service
-      # ToDo: Update the script below to install jmeter, unzip the jmeter test suite published zip artifact, and run the PerformanceTestSuite.
-      # ToDo: Generate the log file.
-      - task: DownloadBuildArtifacts@1
-        inputs:
-          buildType: 'current'
-          downloadType: 'single'
-          artifactName: 'jmeter-test'
-          downloadPath: '$(Pipeline.Workspace)'
-      - task: CmdLine@2
-        inputs:
-          script: |
-            ls -la
-            # workingDirectory: $(Pipeline.Workspace)/<artifact>            # ToDo: Use the artifact name from the task above
+  - job: JMeter
+    steps:
+    #--------------------------------------------#
+    # Run JMeter test suite against the App Service
+    # ToDo: Update the script below to install jmeter, unzip the jmeter test suite published zip artifact, and run the PerformanceTestSuite.
+    # ToDo: Generate the log file.
+    - task: DownloadBuildArtifacts@1
+      inputs:
+        buildType: 'current'
+        downloadType: 'single'
+        artifactName: 'jmeter-test'
+        downloadPath: '$(Pipeline.Workspace)'
+    - task: CmdLine@2
+      inputs:
+        script: |
+          ls -la
+          # workingDirectory: $(Pipeline.Workspace)/<artifact>            # ToDo: Use the artifact name from the task above
 
   # #--------------------------------------------#
   # # Selenium | Functional UI Tests
