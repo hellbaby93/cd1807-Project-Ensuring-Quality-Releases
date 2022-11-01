@@ -208,10 +208,10 @@ stages:
                 sudo apt-install -y wget
                 wget https://downloads.apache.org//jmeter/binaries/apache-jmeter-5.5.zip -O apache-jmeter
                 unzip apache-jmeter
-                unzip $(Build.BuildId)-FakeRestAPI.zip
-                apache-jmeter/bin/jmeter -n -j endurance-test.jmx
-                apache-jmeter/bin/jmeter -n -j stress-test.jmx
-              workingDirectory: $(Pipeline.Workspace)/fake-rest-api/
+                unzip $(Build.BuildId)-jmeter-test-suite.zip
+                apache-jmeter/bin/jmeter.sh -n -j endurance-test.jmx
+                apache-jmeter/bin/jmeter.sh -n -j stress-test.jmx
+              workingDirectory: $(Pipeline.Workspace)/jmeter-test/
 
   # #--------------------------------------------#
   # # Selenium | Functional UI Tests
