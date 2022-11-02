@@ -245,7 +245,7 @@ stages:
                 # export PATH=$PATH:/path/to/chromedriver
                 sudo apt-get install -y google-chrome-stable
 
-                wget https://chromedriver.storage.googleapis.com/94.0.4606.61/chromedriver_linux64.zip
+                wget https://chromedriver.storage.googleapis.com/94.0.4606.61/chromedriver_linux64.zip -q
                 unzip -qq chromedriver_linux64.zip
                 sudo mv chromedriver /usr/bin/chromedriver
                 sudo chown root:root /usr/bin/chromedriver
@@ -255,6 +255,7 @@ stages:
                 # ToDo: Write commands for deploying the UI Test Suite (published zip artifact) to the linux VM and execute the Test Suite
                 # ToDo: Direct the output of the Selenium Test Suite to a log file
 
-                unzip -qq $(System.ArtifactsDirectory)/drop-uitests/$(Build.BuildId)-uitests.zip -d .
+                unzip -qq $(Build.BuildId)-uitests.zip -d .
                 ls -la
                 python uitest.py >> uitest.log
+              workingDirectory: $(Pipeline.Workspace)/drop-uitests/
