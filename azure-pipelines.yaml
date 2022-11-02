@@ -243,7 +243,9 @@ stages:
                 # sudo apt-get install -y chromium-browser
 
                 # export PATH=$PATH:/path/to/chromedriver
-                sudo apt-get install -y google-chrome-stable
+                # sudo apt-get install -y google-chrome-stable
+                wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -q
+                sudo apt install ./google-chrome-stable_current_amd64.deb -y
 
                 wget https://chromedriver.storage.googleapis.com/94.0.4606.61/chromedriver_linux64.zip -q
                 unzip -qq chromedriver_linux64.zip
