@@ -183,9 +183,7 @@ stages:
                 unzip -qq $(Build.BuildId)-jmeter-test-suite.zip
                 echo "================================Replacing file content========================"
                 sed -i -E 's|(.+<stringProp name="filename">).*(/.+.csv</stringProp>)|\1'$(pwd)'\2|' stress-test.jmx
-                cat stress-test.jmx
                 sed -i -E 's|(.+<stringProp name="filename">).*(/.+.csv</stringProp>)|\1'$(pwd)'\2|' endurance-test.jmx
-                cat endurance-test.jmx
                 echo "================================Execute Tests================================="
                 apache-jmeter-5.5/bin/jmeter -n -t endurance-test.jmx
                 apache-jmeter-5.5/bin/jmeter -n -t stress-test.jmx
@@ -248,7 +246,7 @@ stages:
                 sudo apt-get install -y google-chrome-stable
 
                 wget https://chromedriver.storage.googleapis.com/94.0.4606.61/chromedriver_linux64.zip
-                unzip chromedriver_linux64.zip
+                unzip -qq chromedriver_linux64.zip
                 sudo mv chromedriver /usr/bin/chromedriver
                 sudo chown root:root /usr/bin/chromedriver
                 sudo chmod +x /usr/bin/chromedriver
