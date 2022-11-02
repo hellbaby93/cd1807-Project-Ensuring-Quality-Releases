@@ -8,6 +8,7 @@ def config_driver():
     print('Configure Chrome Driver ...')
     options = ChromeOptions()
     options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
     return webdriver.Chrome(options=options)
 
 
