@@ -267,5 +267,5 @@ stages:
                 unzip -qq -o $(Build.BuildId)-uitests.zip -d .
                 ls -la
                 sudo python3.7 -m pip install selenium
-                sudo python3.7 uitest.py >> /tmp/uitest.log
+                sudo python3.7 uitest.py >> /tmp/uitest-$(date +"%s").log
               workingDirectory: $(Pipeline.Workspace)/drop-uitests/
