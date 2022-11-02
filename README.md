@@ -60,13 +60,13 @@ Following this [document](https://learn.microsoft.com/en-us/azure/azure-monitor/
 
 * Screenshots of the email received when the alert is triggered, the graphs of the resource that the alert was triggered for (be sure to include timestamps for the email and the graphs), and the alert rule, which will show the resource, condition, action group, alert name, and severity.
 ![alt text](screenshots/azure_alert_email.png "azure_alert_email")
-![alt text](screenshots/azure_alert_chart.png "azure_alert_email")
-![alt text](screenshots/azure_alert_rule.png "azure_alert_email")
-![alt text](screenshots/azure_alert_metric.png "azure_alert_email")
+![alt text](screenshots/azure_alert_chart.png "azure_alert_chart")
+![alt text](screenshots/azure_alert_rule2.png "azure_alert_rule")
+![alt text](screenshots/azure_alert_metric.png "azure_alert_metric")
 
 
 * Screenshots of log analytics queries and result sets which will show specific output of the Azure resource. The result set will include the output of the execution of the Selenium Test Suite (be sure to include timestamps).
-![alt text](screenshots/azure_mv_log_analytics.png "azure_mv_log_analytics")
+![alt text](screenshots/azure_mv_log_analytics2.png "azure_mv_log_analytics")
 
 
 
