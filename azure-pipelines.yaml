@@ -89,35 +89,6 @@ stages:
     #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
     #     environmentServiceNameAzureRM: '$(azureServiceConnectionId)'
 
-# #--------------------------------------------#
-#     # Postman - Install Newman
-#   - job: NewmanTest
-#     steps:
-#     - task: CmdLine@2
-#       displayName: Install Newman
-#       inputs:
-#         script:           # ToDo: Write your commands to install newman
-#         workingDirectory: $(System.DefaultWorkingDirectory)
-#     # Postman Data Validation Test Suite
-#     - task: CmdLine@2
-#       displayName: Run Data Validation Tests
-#       continueOnError: true
-#       inputs:
-#         script: newman run "Starter APIs.data_validation.json" -x -e "StarterAPITestEnv.postman_environment.json" --delay-request 1000 -r cli,junit --reporter-junit-export $(System.DefaultWorkingDirectory)/test_reports/data_validation.xml
-#         workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
-#     # Postman Regression Test Suite
-#     - task: CmdLine@2
-#       displayName: Run Regression Tests
-#       continueOnError: true
-#       inputs:
-#         script: newman run "Starter APIs.regression.json" -x -e "StarterAPITestEnv.postman_environment.json" --delay-request 1000 -r cli,junit --reporter-junit-export $(System.DefaultWorkingDirectory)/test_reports/regression.xml
-#         workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
-#     # Postman - Publish Results
-#     - task: PublishTestResults@2
-#       inputs:
-#         testResultsFormat: 'JUnit'
-#         testResultsFiles: '$(System.DefaultWorkingDirectory)/test_reports/*.xml'
-#         mergeTestResults: true
   - job: Publishing
     steps:
     #--------------------------------------------#
@@ -230,6 +201,7 @@ stages:
     # Postman Data Validation Test Suite
     - task: CmdLine@2
       displayName: Run Data Validation Tests
+      retryCountOnTaskFailure: 10
       continueOnError: true
       inputs:
         script: newman run "Starter APIs.data_validation.json" -x -e "StarterAPITestEnv.postman_environment.json" --delay-request 1000 -r cli,junit --reporter-junit-export $(System.DefaultWorkingDirectory)/test_reports/data_validation.xml
@@ -237,6 +209,7 @@ stages:
     # Postman Regression Test Suite
     - task: CmdLine@2
       displayName: Run Regression Tests
+      retryCountOnTaskFailure: 10
       continueOnError: true
       inputs:
         script: newman run "Starter APIs.regression.json" -x -e "StarterAPITestEnv.postman_environment.json" --delay-request 1000 -r cli,junit --reporter-junit-export $(System.DefaultWorkingDirectory)/test_reports/regression.xml
@@ -265,7 +238,7 @@ stages:
               buildType: 'current'
               downloadType: 'single'
               artifactName: 'drop-uitest'
-              downloadPath: '$(System.ArtifactsDirectory)'          
+              downloadPath: '$(System.ArtifactsDirectory)'
           - task: Bash@3
             inputs:
               targetType: 'inline'
