@@ -264,5 +264,5 @@ stages:
                 unzip -qq -o $(Build.BuildId)-uitests.zip -d .
                 ls -la
                 pip3 install selenium
-                python uitest.py >> uitest.log
+                python3 uitest.py >> uitest.log
               workingDirectory: $(Pipeline.Workspace)/drop-uitests/
