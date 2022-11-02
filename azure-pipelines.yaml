@@ -260,7 +260,7 @@ stages:
                 # ToDo: Write commands for deploying the UI Test Suite (published zip artifact) to the linux VM and execute the Test Suite
                 # ToDo: Direct the output of the Selenium Test Suite to a log file
 
-                unzip -qq $(Build.BuildId)-uitests.zip -d .
+                unzip -qq -o $(Build.BuildId)-uitests.zip -d .
                 ls -la
                 pip3 install selenium
                 python uitest.py >> uitest.log
