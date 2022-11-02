@@ -69,6 +69,10 @@ def test_add_to_cart_button(username='standard_user', password='secret_sauce'):
 
 
 DRIVER = config_driver()
-test_login()
-test_add_to_cart_button()
-DRIVER.close()
+try:
+    test_login()
+    test_add_to_cart_button()
+except Exception as err:
+    print("ERROR: {}".format(err))
+finally:
+    DRIVER.close()
