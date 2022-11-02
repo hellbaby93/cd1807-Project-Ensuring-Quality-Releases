@@ -244,10 +244,10 @@ stages:
 
                 # export PATH=$PATH:/path/to/chromedriver
                 # sudo apt-get install -y google-chrome-stable
-                wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -q
+                wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
                 sudo apt install ./google-chrome-stable_current_amd64.deb -y
 
-                wget https://chromedriver.storage.googleapis.com/94.0.4606.61/chromedriver_linux64.zip -q
+                wget https://chromedriver.storage.googleapis.com/94.0.4606.61/chromedriver_linux64.zip
                 unzip -qq chromedriver_linux64.zip
                 sudo mv chromedriver /usr/bin/chromedriver
                 sudo chown root:root /usr/bin/chromedriver
