@@ -238,15 +238,16 @@ stages:
                 #! /bin/bash
 
                 sudo apt-get upgrade -y
+                sudo apt-get update -y
                 sudo apt-get install python3-pip -y
                 sudo apt-get install unzip -y
-                # sudo apt-get install -y chromium-browser
+                sudo apt-get install -y chromium-browser
 
                 # export PATH=$PATH:/path/to/chromedriver
-                # sudo apt-get install -y google-chrome-stable
-                rm -f google-chrome-stable_current_amd64*
-                wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-                sudo apt install ./google-chrome-stable_current_amd64.deb -y
+                sudo apt-get install -y google-chrome-stable
+                # rm -f google-chrome-stable_current_amd64*
+                # wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+                # sudo apt install ./google-chrome-stable_current_amd64.deb -y
 
                 rm -f chromedriver_linux64*
                 wget https://chromedriver.storage.googleapis.com/94.0.4606.61/chromedriver_linux64.zip
@@ -262,6 +263,6 @@ stages:
 
                 unzip -qq -o $(Build.BuildId)-uitests.zip -d .
                 ls -la
-                pip install selenium
+                pip3 install selenium
                 python uitest.py >> uitest.log
               workingDirectory: $(Pipeline.Workspace)/drop-uitests/
