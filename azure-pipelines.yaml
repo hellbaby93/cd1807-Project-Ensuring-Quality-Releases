@@ -235,7 +235,7 @@ stages:
             inputs:
               versionSpec: '3.7'
               addToPath: true
-              architecture: 'x64'
+              architecture: 'x86'
           - task: Bash@3
             inputs:
               targetType: 'inline'
