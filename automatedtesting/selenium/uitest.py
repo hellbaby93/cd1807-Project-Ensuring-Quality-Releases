@@ -1,11 +1,24 @@
 # #!/usr/bin/env python
+import logging
+import time
+import sys
+
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.common.by import By
 
+file_handler = logging.FileHandler(
+    filename='/tmp/uitest-{}.log'.format(int(time.time())))
+stdout_handler = logging.StreamHandler(stream=sys.stdout)
+
+logging.basicConfig(
+    format='[%(asctime)s] %(levelname)s - %(message)s',
+    handlers=[file_handler, stdout_handler],
+    level=logging.INFO)
+
 
 def config_driver():
-    print('Configure Chrome Driver ...')
+    logging.info('Configure Chrome Driver ...')
     options = ChromeOptions()
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
@@ -14,7 +27,7 @@ def config_driver():
 
 def test_login(username='standard_user', password='secret_sauce'):
     # Start the browser and login with standard_user
-    print("Testing Logging In")
+    logging.info("Testing Logging In with user %s and password %s", username, password)
     DRIVER.get('https://www.saucedemo.com/')
 
     DRIVER.find_element(by=By.ID, value='user-name').send_keys(username)
@@ -22,58 +35,47 @@ def test_login(username='standard_user', password='secret_sauce'):
     DRIVER.find_element(by=By.ID, value='login-button').click()
 
     assert 'https://www.saucedemo.com/inventory.html' == DRIVER.current_url
-    print("Testing Logging In Passed")
+    logging.info("Testing Logging In Passed")
 
 
 def test_add_to_cart_button(username='standard_user', password='secret_sauce'):
-    print("Testing Add to Cart Buttons")
+    logging.info("Testing Add to Cart Buttons")
 
     DRIVER.get('https://www.saucedemo.com/inventory.html')
-    print("Getting add cart buttons")
-    add_to_cart_btns = [item for item in DRIVER.find_elements(
-        By.CSS_SELECTOR, "button") if item.accessible_name.lower() == "Add to cart".lower()]
-    remove_cart_btns = [item for item in DRIVER.find_elements(
-        By.CSS_SELECTOR, "button") if item.accessible_name.lower() == "Remove".lower()]
-    add_to_cart_btn_count_init = len(add_to_cart_btns)
-    print("Check if add to cart button count > 0 and Remove cart button count == 0")
-    assert add_to_cart_btn_count_init > 0 and len(remove_cart_btns) == 0
-    print("PASSED!")
+    logging.info("Getting add cart buttons")
+    inventory = DRIVER.find_elements(By.CLASS_NAME, "inventory_item")
 
-    print("Clicking add to cart buttons")
-    for item in add_to_cart_btns:
-        item.click()
+    for item in inventory:
+        item_name = item.find_element(By.CLASS_NAME, "inventory_item_name").text
+        logging.info("Click Add to cart on item: %s", item_name)
+        item.find_element(By.CSS_SELECTOR, "button").click()
 
-    add_to_cart_btns = [item for item in DRIVER.find_elements(
-        By.CSS_SELECTOR, "button") if item.accessible_name.lower() == "Add to cart".lower()]
-    remove_cart_btns = [item for item in DRIVER.find_elements(
-        By.CSS_SELECTOR, "button") if item.accessible_name.lower() == "Remove".lower()]
+        logging.info("Check if button on %s is REMOVE", item_name)
+        assert item.find_element(By.CSS_SELECTOR, "button").accessible_name == "REMOVE"
 
-    print("Check if add to cart button count == 0 and Remove cart button count == initial button count")
-    assert len(remove_cart_btns) == add_to_cart_btn_count_init and len(
-        add_to_cart_btns) == 0
-    print("PASSED!")
+    logging.info("Clicking on Cart button")
+    DRIVER.find_element(By.CLASS_NAME, "shopping_cart_link").click()
 
-    print("Clicking Remove buttons")
-    for item in remove_cart_btns:
-        item.click()
+    logging.info("Check if browser is redirected to https://www.saucedemo.com/cart.html")
+    assert DRIVER.current_url == 'https://www.saucedemo.com/cart.html'
 
-    add_to_cart_btns = [item for item in DRIVER.find_elements(
-        By.CSS_SELECTOR, "button") if item.accessible_name.lower() == "Add to cart".lower()]
-    remove_cart_btns = [item for item in DRIVER.find_elements(
-        By.CSS_SELECTOR, "button") if item.accessible_name.lower() == "Remove".lower()]
+    cart_inventory = DRIVER.find_elements(By.CLASS_NAME, "cart_item")
+    logging.info("Get items in carts: {}".format(",".join(item.find_element(By.CLASS_NAME, "inventory_item_name").text for item in cart_inventory)))
 
-    print("Check if add to cart button count == initial button count and Remove cart button count == 0")
+    logging.info("Removing item from cart")
+    for item in cart_inventory:
+        logging.info("Removing %s", item.find_element(By.CLASS_NAME, "inventory_item_name").text)
+        item.find_element(By.CSS_SELECTOR, "button").click()
 
-    assert len(add_to_cart_btns) == add_to_cart_btn_count_init and len(
-        remove_cart_btns) == 0
-    print("PASSED!")
+    logging.info("Check if all items is removed from cart")
+    assert not DRIVER.find_elements(By.CLASS_NAME, "cart_item")
+
+    logging.info("ALL TEST PASSED!")
 
 
 DRIVER = config_driver()
 try:
     test_login()
     test_add_to_cart_button()
-except Exception as err:
-    print("ERROR: {}".format(err))
 finally:
     DRIVER.close()
