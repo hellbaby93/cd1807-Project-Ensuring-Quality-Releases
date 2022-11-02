@@ -14,7 +14,7 @@ pool:
 
 
 variables:
-  python.version: '3.7.6'
+  python.version: '3.7'
   azureServiceConnectionId: 'Udacity'
   # Project root folder. Point to the folder containing manage.py file.
   projectRoot: $(System.DefaultWorkingDirectory)
@@ -231,6 +231,11 @@ stages:
       runOnce:
         deploy:
           steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.7'
+              addToPath: true
+              architecture: 'x64'
           - task: Bash@3
             inputs:
               targetType: 'inline'
@@ -239,7 +244,7 @@ stages:
 
                 sudo apt-get upgrade -y
                 sudo apt-get update -y
-                sudo apt-get install python3-pip -y
+                # sudo apt-get install python3-pip -y
                 sudo apt-get install unzip -y
                 sudo apt-get install -y chromium-browser
 
